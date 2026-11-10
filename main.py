@@ -38,7 +38,7 @@ class Update_Book(BaseModel):
 # Creating an instance of FastAPI
 app = FastAPI()
 
-def show_json():
+def load_json():
     with open('books.json', 'r') as f:
         data = json.load(f)
         return data
@@ -52,14 +52,14 @@ def save_Json(data):
 
 @app.get("/books")
 def show():
-    data = show_json()
+    data = load_json()
     return data
 
 
 # Query Parameter
 @app.get("/books/sort")
 def sorting(sort_by : str | None = Query(..., description="enter what are you using to sort.", example="title"), desc : bool = False):
-    data = show_json()
+    data = load_json()
 
     sorts = ["title", "year", "pages"]
 
@@ -74,14 +74,14 @@ def sorting(sort_by : str | None = Query(..., description="enter what are you us
 # Path parameter
 @app.get("/books/{book_id}")
 def get_book(book_id: str = Path(..., description="for get any perticular book.", example=0)):
-    data = show_json()
+    data = load_json()
     if book_id not in data:
         raise HTTPException(status_code=404, detail="Book not found")
     return data[book_id]
 
 @app.post("/creat")
 def creat(Book : Book):
-    data = show_json()
+    data = load_json()
 
     existing_titles = [book["title"].casefold() for book in data.values() if "title" in book]
 
@@ -101,7 +101,7 @@ def creat(Book : Book):
 
 @app.put("/update/{book_id}")
 def update(Update : Update_Book, book_id : str = Path(..., description="give that books id.", example="b001")):
-    data = show_json()
+    data = load_json()
 
     if book_id not in data:
         raise HTTPException(status_code=404, detail="this book id is not exist in the DB.")
@@ -113,7 +113,7 @@ def update(Update : Update_Book, book_id : str = Path(..., description="give tha
 
 @app.delete("/remove/{book_id}")
 def delete(book_id : str = Path(..., example="b001")):
-    data = show_json()
+    data = load_json()
 
     if book_id not in data:
         raise HTTPException(status_code=404, detail="this book id didn't exist.")
