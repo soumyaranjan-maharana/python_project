@@ -45,8 +45,8 @@ def show_json():
 
 
 def save_Json(data):
-    with open("books.json", "w") as f2:
-        json.dump(data, f2)
+    with open("books.json", "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4, ensure_ascii=False)
 
 
 
