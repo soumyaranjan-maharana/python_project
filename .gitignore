@@ -2,4 +2,5 @@ pydantic/
 __pycache__/
 venv/
 test.py
+API.png
 
